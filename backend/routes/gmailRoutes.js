@@ -2,15 +2,17 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    loginLinkedIn,
-    searchJobs
-} = require("../browser/linkedin");
+    loginGmail,
+    composeMail
+} = require("../browser/gmail");
 
 router.get("/login", async (req, res) => {
+
     try {
-        const result = await loginLinkedIn(
-            process.env.LINKEDIN_EMAIL,
-            process.env.LINKEDIN_PASSWORD
+
+        const result = await loginGmail(
+            process.env.GMAIL_EMAIL,
+            process.env.GMAIL_PASSWORD
         );
 
         res.json(result);
@@ -23,12 +25,15 @@ router.get("/login", async (req, res) => {
         });
 
     }
+
 });
-router.get("/search", async (req, res) => {
+
+router.get("/compose", async (req, res) => {
 
     try {
 
-       const result = await searchJobs();
+        const result = await composeMail();
+
         res.json(result);
 
     } catch (err) {

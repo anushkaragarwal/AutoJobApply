@@ -1,54 +1,80 @@
 const { chromium } = require("playwright");
-
+const path = require("path");
 let browser;
 let page;
 
 async function loginLinkedIn(email, password) {
+  browser = await chromium.launch({
+    headless: false,
+  });
 
-    browser = await chromium.launch({
-        headless: false
-    });
+  const context = await browser.newContext();
 
-    const context = await browser.newContext();
+  page = await context.newPage();
 
-    page = await context.newPage();
+  await page.goto("https://www.linkedin.com/login");
 
-    await page.goto("https://www.linkedin.com/login");
+  await page.fill("#username", email);
+  await page.fill("#password", password);
 
-    await page.fill("#username", email);
-    await page.fill("#password", password);
+  await page.click("button[type='submit']");
 
-    await page.click("button[type='submit']");
-
-    // User manually completes login if needed
-    await page.waitForTimeout(15000);
-
-    return {
-        success: true,
-        message: "LinkedIn Login Successful"
-    };
+  // User manually completes login if needed
+  await page.waitForTimeout(15000);
+  await context.storageState({
+    path: path.join(__dirname, "../data/linkedin-session.json"),
+  });
+  return {
+    success: true,
+    message: "LinkedIn Login Successful",
+  };
 }
 
-async function searchJobs(keyword) {
+async function searchJobs() {
+  if (!page) {
+    throw new Error("Please login first.");
+  }
 
-    if (!page) {
-        throw new Error("Please login first.");
-    }
+  const keywords = [
+    "Java Developer Contract",
+    "Full Stack Developer Contract",
+    "React Developer Contract",
+    "Node.js Developer Contract",
+    ".NET Developer Contract",
+  ];
+
+  const results = [];
+
+  for (const keyword of keywords) {
+   console.log("Searching:", keyword); 
 
     await page.goto(
-        `https://www.linkedin.com/search/results/content/?keywords=${encodeURIComponent(keyword)}`,
-        {
-            waitUntil: "domcontentloaded"
-        }
+      `https://www.linkedin.com/search/results/content/?keywords=${encodeURIComponent(keyword)}`,
+      {
+        waitUntil: "domcontentloaded",
+      },
     );
 
-    return {
-        success: true,
-        message: "Search Completed"
-    };
+    
+    await page.waitForTimeout(5000);
+
+    console.log("Current URL:", await page.url());
+
+    results.push({
+      keyword,
+      url: await page.url(),
+      status: "Completed",
+    });
+  }
+
+  return {
+    success: true,
+    totalSearches: results.length,
+    searches: results,
+  };
 }
 
 module.exports = {
-    loginLinkedIn,
-    searchJobs
+  loginLinkedIn,
+  searchJobs,
 };
