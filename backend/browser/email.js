@@ -14,16 +14,18 @@ async function sendMail(toEmail) {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: toEmail,
-        subject: "Application for Contract Developer Position",
+        subject: "Application for C2C Opportunity",
         text: `Dear Recruiter,
 
 I hope you are doing well.
 
-I came across your LinkedIn post regarding the Contract Developer opportunity.
+I came across your LinkedIn post regarding the C2C opportunity for the specified role.
 
-Please find my resume attached for your consideration.
+Based on the job description, I believe my technical background and project experience align well with the position. Please find my resume attached for your review.
 
-Looking forward to hearing from you.
+I would appreciate the opportunity to discuss my candidature further.
+
+Thank you for your time and consideration.
 
 Regards,
 Anushka Agarwal`,

@@ -36,11 +36,10 @@ async function searchJobs() {
   }
 
   const keywords = [
-    "Java Developer Contract",
-    "Full Stack Developer Contract",
-    "React Developer Contract",
-    "Node.js Developer Contract",
-    ".NET Developer Contract",
+    "Java Developer C2C",
+    "Business Analyst C2C",
+    "Project Manager C2C",
+    "Data Analyst C2C"
   ];
 
   const results = [];
